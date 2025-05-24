@@ -4,19 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c728fa09-b436-4382-9c11-e0ce318036ba" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/semester project.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tetris/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tetris/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tetris/game.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tetris/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tetris/shapes.py" afterDir="false" />
+    <list default="true" id="c728fa09-b436-4382-9c11-e0ce318036ba" name="Changes" comment="added .gitignore">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tetris/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/tetris/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tetris/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/tetris/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tetris/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/tetris/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tetris/shapes.py" beforeDir="false" afterPath="$PROJECT_DIR$/tetris/shapes.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +19,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/BohdanIvashchenko/ultratetrisultra.git",
+    "accountId": "fdfa93bc-50bc-4a6c-9d91-65f3308ce6c3"
+  }
+}]]></component>
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 3
 }]]></component>
@@ -38,6 +37,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master"
   }
@@ -58,6 +58,19 @@
       <option name="presentableId" value="Default" />
       <updated>1748091038855</updated>
     </task>
+    <task id="LOCAL-00001" summary="added .gitignore">
+      <option name="closed" value="true" />
+      <created>1748092836106</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1748092836106</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added .gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="added .gitignore" />
   </component>
 </project>
