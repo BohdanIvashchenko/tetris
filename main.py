@@ -7,18 +7,35 @@ COLUMNS = 10
 WIDTH = COLUMNS * CELL_SIZE
 HEIGHT = ROWS * CELL_SIZE
 TOP_PANEL_HEIGHT = 60
-BACKGROUND_COLOR = "#1a1a1a"
 FPS = 500
-TEXT_COLOR = "#B0FFB0"
+
+THEMES = {
+    "dark": {
+        "background": "#1a1a1a",
+        "text": "#B0FFB0",
+        "grid": "#333",
+        "block_outline": "#111",
+        "button_bg": "#333",
+        "button_fg": "#B0FFB0"
+    },
+    "light": {
+        "background": "#f4f4f4",
+        "text": "#202020",
+        "grid": "#cccccc",
+        "block_outline": "#999",
+        "button_bg": "#dddddd",
+        "button_fg": "#202020"
+    }
+}
 
 COLORS = [
-    "#4B6EAF",  # темно-синій
-    "#6B4226",  # коричневий
-    "#3C6E71",  # зелено-блакитний
-    "#A9A9A9",  # темно-сірий
-    "#6C584C",  # болотний
-    "#7E57C2",  # фіолетовий
-    "#9E2A2B"   # бордовий
+    "#1E90FF",  # Яскравий кобальтовий синій — насичений і чистий, без зеленуватих відтінків
+    "#FF6F61",  # Теплий кораловий — яскравий і помітний, червоно-помаранчевий відтінок
+    "#FFD23F",  # Сонячний жовтий — теплий, не надто насичений, але яскравий
+    "#6B4226",  # Землистий теракотовий — глибокий і природний коричневий (теплий і контрастний)
+    "#2E8B57",  # Морський зелений — насичений, з більш «холодним» зеленим відтінком, не близький до синього
+    "#9B2D30",  # Темний рубіновий — багатий, глибокий червоний, що контрастує з іншими кольорами
+    "#4B0082"   # Індиго — темний фіолетово-синій, віддалений від зеленого і жовтого
 ]
 
 SHAPES = [
@@ -38,9 +55,11 @@ SHAPES = [
 ]
 
 class Tetris:
-    def __init__(self, canvas, root):
+    def __init__(self, canvas, root, theme_name="light"):
         self.canvas = canvas
         self.root = root
+        self.theme_name = theme_name
+        self.theme = THEMES[theme_name]
         self.running = False
         self.board = [[None for _ in range(COLUMNS)] for _ in range(ROWS)]
         self.current_shape = None
@@ -56,30 +75,29 @@ class Tetris:
         self.game_over_text = None
 
         self.score_text = self.canvas.create_text(
-            10, 20,
-            text=f"Score: {self.score}",
+            10, 20, text=f"Score: {self.score}",
             font=("Arial", 14, "bold"),
-            fill=TEXT_COLOR,
-            anchor="w"
+            fill=self.theme["text"], anchor="w"
         )
         self.level_text = self.canvas.create_text(
-            WIDTH - 10, 20,
-            text=f"Level: {self.level}",
+            WIDTH - 10, 20, text=f"Level: {self.level}",
             font=("Arial", 14, "bold"),
-            fill=TEXT_COLOR,
-            anchor="e"
+            fill=self.theme["text"], anchor="e"
         )
 
         self.draw_grid()
 
     def draw_grid(self):
+        self.canvas.delete("grid")
         for row in range(ROWS):
             for col in range(COLUMNS):
                 x1 = col * CELL_SIZE
                 y1 = row * CELL_SIZE + TOP_PANEL_HEIGHT
                 x2 = x1 + CELL_SIZE
                 y2 = y1 + CELL_SIZE
-                self.canvas.create_rectangle(x1, y1, x2, y2, outline="#333")
+                self.canvas.create_rectangle(x1, y1, x2, y2,
+                                             outline=self.theme["grid"],
+                                             tags="grid")
 
     def start(self):
         if self.restart_button:
@@ -95,6 +113,7 @@ class Tetris:
         self.canvas.delete("block")
         self.canvas.itemconfig(self.score_text, text=f"Score: {self.score}")
         self.canvas.itemconfig(self.level_text, text=f"Level: {self.level}")
+        self.draw_grid()
         self.spawn_new_shape()
         self.update()
 
@@ -104,7 +123,7 @@ class Tetris:
         self.shape_id = []
         shape_index = random.randint(0, len(SHAPES) - 1)
         self.current_shape = SHAPES[shape_index]
-        self.shape_color = COLORS[shape_index]
+        self.shape_color = random.choice(COLORS)
         self.shape_y = 0
         self.shape_x = COLUMNS // 2 - len(self.current_shape[0]) // 2
         if not self.can_move(0, 0):
@@ -115,7 +134,10 @@ class Tetris:
                 font=("Arial", 28, "bold"),
                 fill="red"
             )
-            self.restart_button = tk.Button(self.root, text="Грати знову", font=("Arial", 14, "bold"), command=self.start)
+            self.restart_button = tk.Button(self.root, text="Грати знову", font=("Arial", 14, "bold"),
+                                            command=self.start,
+                                            bg=self.theme["button_bg"],
+                                            fg=self.theme["button_fg"])
             self.restart_button.place(x=WIDTH // 2 - 60, y=HEIGHT // 2 + 40)
             return
         self.draw_shape()
@@ -129,7 +151,8 @@ class Tetris:
                     block = self.canvas.create_rectangle(
                         x_coord, y_coord,
                         x_coord + CELL_SIZE, y_coord + CELL_SIZE,
-                        fill=self.shape_color, outline="#111"
+                        fill=self.shape_color,
+                        outline=self.theme["block_outline"]
                     )
                     self.shape_id.append(block)
 
@@ -153,22 +176,20 @@ class Tetris:
             self.move_shape_down()
 
     def rotate_shape(self):
-        rotated = list(zip(*self.current_shape))
-        rotated = [list(row)[::-1] for row in rotated]
+        rotated = list(zip(*self.current_shape[::-1]))
+        rotated = [list(row) for row in rotated]
         old_shape = self.current_shape
         self.current_shape = rotated
         if self.can_move(0, 0):
             self._redraw_rotated_shape()
-            return
-        if self.can_move(-1, 0):
+        elif self.can_move(-1, 0):
             self.shape_x -= 1
             self._redraw_rotated_shape()
-            return
-        if self.can_move(1, 0):
+        elif self.can_move(1, 0):
             self.shape_x += 1
             self._redraw_rotated_shape()
-            return
-        self.current_shape = old_shape
+        else:
+            self.current_shape = old_shape
 
     def _redraw_rotated_shape(self):
         for block in self.shape_id:
@@ -200,7 +221,9 @@ class Tetris:
                         y1 = board_y * CELL_SIZE + TOP_PANEL_HEIGHT
                         self.canvas.create_rectangle(
                             x1, y1, x1 + CELL_SIZE, y1 + CELL_SIZE,
-                            fill=self.shape_color, outline="#111", tags="block"
+                            fill=self.shape_color,
+                            outline=self.theme["block_outline"],
+                            tags="block"
                         )
         self.clear_lines()
 
@@ -222,10 +245,7 @@ class Tetris:
             new_board.insert(0, [None for _ in range(COLUMNS)])
         self.board = new_board
         self.redraw_board()
-        if lines_cleared == 4:
-            self.score += 4 * 10 * 10
-        else:
-            self.score += lines_cleared * 10
+        self.score += lines_cleared * 10 if lines_cleared < 4 else 4 * 10 * 10
         self.canvas.itemconfig(self.score_text, text=f"Score: {self.score}")
         self.lines_cleared_total += lines_cleared
         if self.lines_cleared_total >= 10:
@@ -243,18 +263,43 @@ class Tetris:
                     y1 = y * CELL_SIZE + TOP_PANEL_HEIGHT
                     self.canvas.create_rectangle(
                         x1, y1, x1 + CELL_SIZE, y1 + CELL_SIZE,
-                        fill=color, outline="#111", tags="block"
+                        fill=color, outline=self.theme["block_outline"],
+                        tags="block"
                     )
 
+    def set_theme(self, theme_name):
+        self.theme_name = theme_name
+        self.theme = THEMES[theme_name]
+        self.canvas.itemconfig(self.score_text, fill=self.theme["text"])
+        self.canvas.itemconfig(self.level_text, fill=self.theme["text"])
+        self.canvas.config(bg=self.theme["background"])
+        if self.restart_button:
+            self.restart_button.config(bg=self.theme["button_bg"], fg=self.theme["button_fg"])
+        self.redraw_board()
+        self.draw_grid()
 
-# --- Створення вікна та запуск гри ---
+# GUI Setup
 root = tk.Tk()
 root.title("Tetris")
 
-canvas = tk.Canvas(root, width=WIDTH, height=HEIGHT + TOP_PANEL_HEIGHT, bg=BACKGROUND_COLOR, highlightthickness=0)
+canvas = tk.Canvas(root, width=WIDTH, height=HEIGHT + TOP_PANEL_HEIGHT,
+                   bg=THEMES["light"]["background"], highlightthickness=0)
 canvas.pack()
 
-game = Tetris(canvas, root)
+game = Tetris(canvas, root, theme_name="light")
+current_theme = ["dark"]
+
+def toggle_theme():
+    current_theme[0] = "light" if current_theme[0] == "dark" else "dark"
+    game.set_theme(current_theme[0])
+    theme_button.config(bg=game.theme["button_bg"], fg=game.theme["button_fg"])
+
+theme_button = tk.Button(root, text="Toggle Theme", command=toggle_theme,
+                         bg=THEMES["light"]["button_bg"],
+                         fg=THEMES["light"]["button_fg"],
+                         font=("Arial", 10, "bold"))
+theme_button.pack(pady=10)
+
 game.start()
 
 def on_key(event):
